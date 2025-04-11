@@ -58,7 +58,7 @@ A seção principal com a lógica do programa:
 
 ## 👨‍💻 Autores
 
-Nome: Luis Henrique Ponciano dos Santos
-Nome: Gabriel Araujo de Lima
+- Nome: Luis Henrique Ponciano dos Santos
+- Nome: Gabriel Araujo de Lima
 
 Calculadora desenvolvida em Assembly RISC-V como parte de estudos de arquitetura de computadores e programação de baixo nível.
