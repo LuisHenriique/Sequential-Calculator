@@ -113,11 +113,14 @@ escolhe_operacao:
 		
 		
 		
+#-----------------------------------------------------------
+# somar
+# Prepara parâmetros e chama função de soma
+#-----------------------------------------------------------
 somar:
-		mv a0,t0  # coloco o valor de t0 em a0; t0 = num1
-		mv a1, t1  # coloco o valor de t1 em a0; t1 = num2
-		jal funcao_somar
-		
+  		mv    a0, t0        # Primeiro operando (numero1)
+  	 	mv    a1, t1        # Segundo operando (numero2)
+   		jal   funcao_somar  # Chamar função de soma
 		
 		sw a0,0(s0) # armazeno o valor de a0(resultado) em s0
 		lw a1,0(s0) # coloco o valor do resultado no parâmetro a1, para chamar a função imprimir
@@ -126,7 +129,11 @@ somar:
 		jal inserir_resultado		
 		j demais_entradas
 		
-		
+
+#-----------------------------------------------------------
+# subtrair
+# Prepara parâmetros e chama função de subtração
+#-----------------------------------------------------------
 subtrair:
 		mv a0,t0 # coloco o valor de t0 em a0; t0 = num1
 		mv a1, t1 # coloco o valor de t1 em a0; t1 = num2
@@ -141,7 +148,10 @@ subtrair:
 		j demais_entradas
 		
 		
-		
+#-----------------------------------------------------------
+# multiplicar
+# Prepara parâmetros e chama função de multiplicação
+#-----------------------------------------------------------
 multiplicar:
 		mv a0,t0 # coloco o valor de t0 em a0; t0 = num1
 		mv a1, t1 # coloco o valor de t1 em a0; t1 = num2
@@ -155,7 +165,11 @@ multiplicar:
 		jal inserir_resultado
 		j demais_entradas
 		
-		
+
+#-----------------------------------------------------------
+# dividir
+# Prepara parâmetros e chama função de divisão
+#-----------------------------------------------------------
 dividir:	
 		beq t1,zero, erro_divisao #if t1=0, operação inválida, imprime erro e finaliza programa
 		mv a0,t0 # coloco o valor de t0 em a0; t0 = num1
@@ -175,9 +189,7 @@ dividir:
   		li a7, 4
   		la a0, str_erro_div
   		ecall
-  		j fim_code
-		
-	
+  		j fim_code # encerro o programa
 		
 demais_entradas:	
 		######### Demais entradas #########
@@ -270,29 +282,49 @@ fim_code:
 		ecall
 		
 		
-#função soma dois valores
-#parâmetros:
-#a0: num1 e a1: num2	
-#retorno em a0: resultado de num1+num2	
+#-----------------------------------------------------------
+# funcao_somar
+# Soma dois inteiros
+# Parâmetros:
+#   a0 - primeiro operando
+#   a1 - segundo operando
+# Retorno:
+#   a0 - resultado da soma
+#-----------------------------------------------------------
 funcao_somar:
 		add t0, a0, a1
 		mv a0, t0
 		jr ra 
 
-#função subtrai dois valores
-#parâmetros:
-#a0: num1 e a1: num2	
-#retorno em a0: resultado de num1-num2
+
+#-----------------------------------------------------------
+# funcao_subtrair
+# Subtrai dois inteiros
+# Parâmetros:
+#   a0 - primeiro operando
+#   a1 - segundo operando
+# Retorno:
+#   a0 - resultado da subtração (a0 - a1)
+#-----------------------------------------------------------
+
 funcao_subtrair:
 		sub t0, a0, a1
 		mv a0, t0
 		jr ra
 
 
-#função dividi dois valores
-#parâmetros:
-#a0: num1 e a1: num2	
-#retorno em a0: resultado de num1/num2
+#-----------------------------------------------------------
+# funcao_dividir
+# Divide dois inteiros
+# Parâmetros:
+#   a0 - dividendo
+#   a1 - divisor
+# Retorno:
+#   a0 - resultado da divisão inteira (a0 / a1)
+# Observação:
+#   A verificação de divisão por zero é feita antes da chamada
+#-----------------------------------------------------------
+
 funcao_dividir:
 		beq a1, zero, erro_divisao
 		div t0, a0,a1
@@ -300,19 +332,31 @@ funcao_dividir:
 		jr ra
   
 
-#função multiplica dois valores
-#parâmetros:
-#a0: num1 e a1: num2	
-#retorno em a0: resultado de num1*num2
+#-----------------------------------------------------------
+# funcao_multiplicar
+# Multiplica dois inteiros
+# Parâmetros:
+#   a0 - primeiro operando
+#   a1 - segundo operando
+# Retorno:
+#   a0 - resultado da multiplicação
+#-----------------------------------------------------------
+
 funcao_multiplicar:
 
 		mul t0, a0, a1
 		mv a0, t0
 		jr ra
 	
-#função imprimir 
-#parâmetro:
-#a0: valor a ser impresso(resultado)
+	
+#-----------------------------------------------------------
+# funcao_imprimir
+# Imprime um número inteiro na tela
+# Parâmetros:
+#   a1 - valor a ser impresso
+# Retorno:
+#   nenhum
+#-----------------------------------------------------------
 
 funcao_imprimir:
 	
@@ -331,9 +375,14 @@ funcao_imprimir:
 
 #Lista encadeada
 
-#Função inserir resultado na lista
-#parâmetro:
-#a1: valor do resultado atual
+#-----------------------------------------------------------
+# inserir_resultado
+# Insere o último resultado em uma lista encadeada
+# Parâmetros:
+#   resultado - valor a ser armazenado na lista
+# Retorno:
+#   nenhum
+#-----------------------------------------------------------
 inserir_resultado:
 
     # alocar memória (8 bytes para novo nó)
@@ -355,7 +404,15 @@ inserir_resultado:
 
     jr ra
 
-#função undo
+#-----------------------------------------------------------
+# undo
+# Desfaz a última operação feita, removendo o último resultado
+# da stack e restaurando o valor anterior.
+# Parâmetros:
+#   Nenhum (a stack é manipulada diretamente)
+# Retorno:
+#   a0 - resultado anterior (restaurado)
+#-----------------------------------------------------------
 undo:
     la t0, head
     lw t1, 0(t0)       # t1 = ponteiro para o topo
