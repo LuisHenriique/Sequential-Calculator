@@ -7,11 +7,11 @@ Este projeto é uma calculadora sequencial desenvolvida em linguagem de montagem
 - Soma (`+`)
 - Subtração (`-`)
 - Multiplicação (`*`)
-- Divisão (`/`) com tratamento de divisão por zero
+- Divisão (`/`) com retorno inteiro
 - Encadeamento de operações com uso do resultado anterior
 - Desfazer a última operação (`u`)
 - Finalizar o programa (`f`)
-- Mensagens de erro para entradas inválidas
+
 
 ## 📋 Estrutura do Código
 
@@ -23,7 +23,7 @@ Contém as **mensagens de texto** e **variáveis principais**:
 - `numero1`, `numero2`: operandos
 - `resultado`: armazena o resultado atual da operação
 - `operador`: caractere representando a operação (`+`, `-`, `*`, `/`, `u`, `f`)
-- Mensagens de entrada, erro e finalização
+
 
 ### ⚙️ Seção `.text`
 
@@ -36,7 +36,7 @@ A seção principal com a lógica do programa:
    - Verifica por operadores especiais: `u` (undo), `f` (fim)
 5. Impressão do resultado
 6. Encadeamento: usa o resultado como próximo `numero1`
-7. Armazena o histórico para possível operação de desfazer (por meio de lista encadeada, não incluída neste trecho)
+7. Armazena o histórico para possível operação de desfazer (por meio de lista encadeada)
 
 ## 💻 Execução
 
@@ -51,36 +51,14 @@ A seção principal com a lógica do programa:
 3. Execute com "Run" ou `F5`
 4. Siga as instruções no console
 
-## 📌 Comandos durante a execução
-
-| Entrada | Ação |
-|--------|------|
-| Número inteiro | Operando para a operação |
-| `+` | Soma |
-| `-` | Subtração |
-| `*` | Multiplicação |
-| `/` | Divisão |
-| `u` | Desfaz a última operação |
-| `f` | Finaliza a calculadora |
-
-## ⚠️ Tratamento de erros
-
-- **Operador inválido:** exibe mensagem e pede nova entrada.
-- **Divisão por zero:** exibe mensagem de erro e termina o programa.
-- **Undo sem histórico:** exibe que não há operações a desfazer.
-
 ## 📎 Observações
 
 - O programa reutiliza o **resultado anterior** como primeiro operando da próxima operação.
-- A funcionalidade de **undo** depende de uma lista encadeada (provavelmente com funções `inserir_resultado` e `undo`), que deve ser implementada à parte para funcionar plenamente.
-- Modularização: as operações matemáticas são chamadas como sub-rotinas (por exemplo, `funcao_somar`, `funcao_imprimir`).
+- A funcionalidade de **undo** depende de uma lista encadeada.
 
-## 🛠️ Possíveis melhorias
+## 👨‍💻 Autores
 
-- Implementar a exibição de histórico completo das operações.
-- Melhorar a estrutura de `undo` com controle de múltiplos níveis.
-- Separar as funções auxiliares em outro arquivo `.s` para modularização.
-
-## 👨‍💻 Autor
+Nome: Luis Henrique Ponciano dos Santos
+Nome: Gabriel Araujo de Lima
 
 Calculadora desenvolvida em Assembly RISC-V como parte de estudos de arquitetura de computadores e programação de baixo nível.
