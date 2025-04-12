@@ -385,56 +385,74 @@ funcao_imprimir:
 #-----------------------------------------------------------
 inserir_resultado:
 
-    # alocar memória (8 bytes para novo nó)
-    li a7, 9      # syscall sbrk
-    li a0, 8      # 8 bytes
-    ecall
-    mv t0, a0     # t0 = endereço do novo nó
-
-    # armazenar o valor do resultado
-    sw a1, 0(t0)
-
-    # armazenar ponteiro para o antigo head
-    la t1, head
-    lw t2, 0(t1)
-    sw t2, 4(t0)
-
-    # atualizar head para apontar para novo nó
-    sw t0, 0(t1)
-
-    jr ra
+	    # alocar memória (8 bytes para novo nó)
+	    li a7, 9      # syscall sbrk
+	    li a0, 8      # 8 bytes
+	    ecall
+	    mv t0, a0     # t0 = endereço do novo nó
+	
+	    # armazenar o valor do resultado
+	    sw a1, 0(t0)
+	
+	    # armazenar ponteiro para o antigo head
+	    la t1, head
+	    lw t2, 0(t1)
+	    sw t2, 4(t0)
+	
+	    # atualizar head para apontar para novo nó
+	    sw t0, 0(t1)
+	
+	    jr ra
 
 #-----------------------------------------------------------
-# undo
-# Desfaz a última operação feita, removendo o último resultado
-# da stack e restaurando o valor anterior.
-# Parâmetros:
-#   Nenhum (a stack é manipulada diretamente)
+# desempilhar_resultado
+# Remove o topo da pilha e retorna o valor desempilhado em a0
 # Retorno:
-#   a0 - resultado anterior (restaurado)
+#   a0 - valor desempilhado (último resultado)
+#   Se pilha estiver vazia, a0 = 0 e a1 = 0
 #-----------------------------------------------------------
+desempilhar_resultado:
+	    la t0, head
+	    lw t1, 0(t0)       # t1 = head
+	
+	    beqz t1, pilha_vazia
+	
+	    lw t2, 4(t1)       # t2 = próximo nó
+	    sw t2, 0(t0)       # atualiza head
+	
+	    lw a0, 0(t1)       # a0 = valor desempilhado
+	    li a1, 1           # flag de sucesso
+	
+	 
+	    jr ra
+
+pilha_vazia:
+	    li a0, 0
+	    li a1, 0           # flag de falha
+	    jr ra
+	    
+	    
 undo:
-    la t0, head
-    lw t1, 0(t0)       # t1 = ponteiro para o topo
-
-    beqz t1, sem_resultado_para_restaurar # se head == 0, lista vazia
-
-    lw t2, 4(t1)       # t2 = ponteiro para próximo nó
-    sw t2, 0(t0)       # atualiza head para t2
-
-    # resultado anterior (agora topo)
-    beqz t2, sem_resultado_para_restaurar # se a lista acabou aqui
-    lw t3, 0(t2)
-    la t4, resultado
-    sw t3, 0(t4)       # atualiza variável resultado
-
-    # imprime
-    mv a1, t3
-    jal funcao_imprimir
-    j demais_entradas
-
+ 	    call desempilhar_resultado
+	    beqz a1, sem_resultado_para_restaurar  # se flag == 0
+	
+	    # Agora o topo aponta para o valor anterior
+	    la t0, head
+	    lw t1, 0(t0)       # t1 = novo topo
+	    beqz t1, sem_resultado_para_restaurar
+	
+	    lw t2, 0(t1)       # t2 = valor anterior
+	    la t3, resultado
+	    sw t2, 0(t3)       # atualiza resultado
+	
+	    mv a1, t2
+	    jal funcao_imprimir
+	    j demais_entradas
+	
 sem_resultado_para_restaurar:
-    li a7, 4
-    la a0,str_lista_vazia
-    ecall
-    j demais_entradas
+	    li a7, 4
+	    la a0, str_lista_vazia
+	    ecall
+	    j demais_entradas
+	
+	
